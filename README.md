@@ -14,8 +14,8 @@ Kontak yang bisa dihubungi
 Navbar ke daftar kamar, fasilitas, dan kontak
 
 Gambar:
+![image](https://github.com/user-attachments/assets/f98d4c15-1f93-414f-b9c5-f97690656146)
 
-[https://github.com/user-attachments/assets/c8efba09-4daa-4999-af89-811b2db01b81]
 
 https://github.com/user-attachments/assets/c36fe2d7-fefa-45eb-a567-f6bda61797b7
 
