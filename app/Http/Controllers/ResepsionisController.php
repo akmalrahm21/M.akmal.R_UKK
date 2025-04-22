@@ -5,6 +5,8 @@ namespace App\Http\Controllers;
 use App\Models\Resepsionis;
 use App\Models\Kamar;
 use Illuminate\Http\Request;
+use App\Mail\BookingConfirmationMail;
+use Illuminate\Support\Facades\Mail;
 
 class ResepsionisController extends Controller
 {
@@ -19,6 +21,7 @@ class ResepsionisController extends Controller
             'jumlah_pesan' => 'required|integer|min:1',
             'checkin' => 'required|date',
             'checkout' => 'required|date|after:checkin',
+            'tipe_kamar' => 'required|string',
         ]);
 
         $kamar = Kamar::findOrFail($request->kamar_id);
@@ -39,6 +42,11 @@ class ResepsionisController extends Controller
                 'checkout' => $request->checkout,
                 'status' => 'pending',
             ]);
+
+            $bookingData = $pesanan->toArray();
+            $bookingData['room_type'] = $request->tipe_kamar; 
+
+            Mail::to($request->email)->send(new BookingConfirmationMail($bookingData));
 
             return response()->json([
                 'success' => 'Pesanan berhasil dibuat!',

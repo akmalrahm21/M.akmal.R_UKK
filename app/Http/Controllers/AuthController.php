@@ -31,9 +31,9 @@ class AuthController extends Controller
             'password' => bcrypt($request->password),
         ]);
 
-        Auth::login($user);
+        $user->sendEmailVerificationNotification(); 
 
-        return $this->redirectUserBasedOnRole();
+        return redirect()->route('register')->with('status', 'Please verify your email address.');
     }
 
     public function login(Request $request)
@@ -60,7 +60,7 @@ class AuthController extends Controller
     {
         $user = Auth::user();
         if ($user->role == 'admin') {
-            return redirect()->route('admin.kamar.index');
+            return redirect()->route('kamar.index');
         } elseif ($user->role == 'resepsionis') {
             return redirect()->route('resepsionis.index');
         } else {

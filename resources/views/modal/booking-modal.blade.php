@@ -4,7 +4,8 @@
             <form action="{{ route('pesanan.store') }}" method="POST">
                 @csrf
                 <input type="hidden" name="kamar_id" id="modalRoomId">
-
+                <input type="hidden" name="tipe_kamar" id="modalRoomTypeInput">
+                
                 <div class="modal-header">
                     <h5 class="modal-title">Pesan Kamar: <span id="modalRoomType"></span></h5>
                     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Tutup"></button>
@@ -69,6 +70,9 @@
             <form action="{{ route('resepsionis.upload_bukti') }}" method="POST" enctype="multipart/form-data">
                 @csrf
                 <input type="hidden" name="resepsionis_id" id="modalPaymentId">
+                <input type="hidden" name="kamar_id" id="modalRoomId">
+                <input type="hidden" name="tipe_kamar" id="modalRoomTypeInput">
+
 
                 <div class="modal-header">
                     <h5 class="modal-title">Upload Bukti Pembayaran</h5>
@@ -114,6 +118,7 @@
             const btn = e.relatedTarget;
             document.getElementById('modalRoomId').value = btn.dataset.roomId;
             document.getElementById('modalRoomType').innerText = btn.dataset.roomType;
+            document.getElementById('modalRoomTypeInput').value = btn.dataset.roomType;
             document.getElementById('modalRoomPhoto').src = btn.dataset.roomPhoto;
             document.getElementById('modalRoomAvailable').innerText = btn.dataset.roomAvailable;
 

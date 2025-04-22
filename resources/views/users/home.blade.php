@@ -41,7 +41,6 @@
         <h1 class="display-4 fw-bold mb-3">Selamat Datang di Hotel Insitu</h1>
         <p class="lead mb-4">Pengalaman menginap mewah dengan kenyamanan tak tertandingi</p>
         <a href="#rooms" class="btn btn-primary btn-lg me-2"><i class="bi bi-door-open"></i> Lihat Kamar</a>
-        <a href="#rooms" class="btn btn-success btn-lg"><i class="bi bi-calendar-check"></i> Pesan Sekarang</a>
     </div>
 </section>
 

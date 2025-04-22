@@ -27,7 +27,7 @@
             </tr>
         </thead>
         <tbody>
-            @foreach($pesanans as $p)
+            @forelse($pesanans as $p)
             <tr>
                 <td>{{ $p->nama }}</td>
                 <td>{{ $p->email }}</td>
@@ -73,7 +73,9 @@
                     </form>
                 </td>
             </tr>
-            @endforeach
+            @empty
+            <tr><td colspan="4">Belum ada data</td></tr>
+        @endforelse
         </tbody>
     </table>
 </div>

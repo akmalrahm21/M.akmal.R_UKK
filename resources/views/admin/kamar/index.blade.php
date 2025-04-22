@@ -17,7 +17,7 @@
             </tr>
         </thead>
         <tbody>
-            @foreach ($kamar as $item)
+            @forelse ($kamar as $item)
                 <tr>
                     <td><img src="{{ asset('storage/' . $item->foto) }}" width="100" alt="Foto"></td>
                     <td>{{ $item->tipe_kamar }}</td>
@@ -31,7 +31,10 @@
                         </form>
                     </td>
                 </tr>
-            @endforeach
+                @empty
+                <tr><td colspan="4">Belum ada data</td></tr>
+            @endforelse
+
         </tbody>
     </table>
 </div>
