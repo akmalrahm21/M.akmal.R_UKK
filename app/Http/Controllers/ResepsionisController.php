@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\Resepsionis;
 use App\Models\Kamar;
+use Illuminate\Support\Facades\Log;
 use Illuminate\Http\Request;
 use App\Mail\BookingConfirmationMail;
 use Illuminate\Support\Facades\Mail;
@@ -43,16 +44,11 @@ class ResepsionisController extends Controller
                 'status' => 'pending',
             ]);
 
-            $bookingData = $pesanan->toArray();
-            $bookingData['room_type'] = $request->tipe_kamar; 
-
-            Mail::to($request->email)->send(new BookingConfirmationMail($bookingData));
-
             return response()->json([
-                'success' => 'Pesanan berhasil dibuat!',
                 'resepsionis_id' => $pesanan->id
             ]);
         } catch (\Exception $e) {
+            \Log::error("Kesalahan saat membuat pesanan: " . $e->getMessage());
             return response()->json(['error' => 'Terjadi kesalahan saat membuat pesanan.'], 500);
         }
     }
@@ -94,9 +90,20 @@ class ResepsionisController extends Controller
             $file->move(public_path('bukti_pembayaran'), $filename);
 
             $pesanan->bukti_pembayaran = $filename;
+            $pesanan->status = 'paid';
             $pesanan->save();
 
-            return redirect()->back()->with('success', 'Bukti pembayaran berhasil diupload!');
+            try {
+                $bookingData = $pesanan->toArray();
+                $bookingData['room_type'] = $pesanan->tipe_kamar;
+
+                Mail::to($pesanan->email)->send(new BookingConfirmationMail($bookingData));
+            } catch (\Exception $e) {
+                \Log::error("Kesalahan saat mengirim email: " . $e->getMessage());
+                return redirect()->back()->with('error', 'Bukti pembayaran berhasil diunggah, tetapi email gagal dikirim.');
+            }
+
+            return redirect()->back()->with('success', 'Bukti pembayaran berhasil diunggah dan email konfirmasi telah dikirim.');
         }
 
         return redirect()->back()->with('error', 'Gagal upload bukti pembayaran.');
@@ -130,8 +137,41 @@ class ResepsionisController extends Controller
         if (auth()->user()->role !== 'resepsionis') {
             return redirect()->route('home')->with('error', 'Anda tidak memiliki akses ke halaman ini.');
         }
+
         $pesanans = Resepsionis::latest()->get();
         return view('resepsionis.index', compact('pesanans'));
     }
+
+public function batal($id)
+{
+    $pesanan = Resepsionis::findOrFail($id);
+
+    try {
+        $kamar = Kamar::findOrFail($pesanan->kamar_id);
+
+        $kamar->jumlah_kamar += $pesanan->jumlah_pesan;
+        $kamar->save();
+
+        $pesanan->delete();
+
+        return response()->json(['success' => 'Pesanan berhasil dibatalkan.']);
+    } catch (\Exception $e) {
+        return response()->json(['error' => 'Gagal membatalkan pesanan.'], 500);
+    }
+}
+public function batalEmail($id)
+{
+    $pesanan = Resepsionis::findOrFail($id);
+
+    try {
+
+        $pesanan->status = 'email_batal';
+        $pesanan->save();
+
+        return response()->json(['success' => 'Pengiriman email berhasil dibatalkan.']);
+    } catch (\Exception $e) {
+        return response()->json(['error' => 'Gagal membatalkan pengiriman email.'], 500);
+    }
+}
 
 }

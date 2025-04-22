@@ -36,8 +36,10 @@ Route::resource('fasilitas', FasilitasController::class)->parameters([
 
 
 
+
 use App\Http\Controllers\ResepsionisController;
 
+Route::post('/resepsionis/batal/{id}', [ResepsionisController::class, 'batal'])->name('resepsionis.batal');
 Route::post('/pesanan', [ResepsionisController::class, 'store'])->name('pesanan.store');
 Route::get('/resepsionis', [ResepsionisController::class, 'index'])->name('resepsionis.index');
 Route::put('/resepsionis/konfirmasi/{id}', [ResepsionisController::class, 'konfirmasi'])->name('resepsionis.konfirmasi');

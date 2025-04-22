@@ -53,7 +53,7 @@ class FasilitasController extends Controller
         $data = $request->only('nama_fasilitas', 'keterangan');
 
         if ($request->hasFile('foto_fasilitas')) {
-            // hapus yang lama dulu
+
             if ($fasilitas->foto_fasilitas) {
                 Storage::disk('public')->delete($fasilitas->foto_fasilitas);
             }

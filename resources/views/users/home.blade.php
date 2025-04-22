@@ -55,12 +55,14 @@
                 <div class="card-body">
                     <h5>{{ $kamar->tipe_kamar }}</h5>
                     <p>{{ $kamar->fasilitas }}</p>
+                    <p><strong>Harga:</strong> Rp {{ number_format($kamar->harga_kamar, 0, ',', '.') }}</p>
                     <p><i class="bi bi-check-circle-fill text-success"></i> {{ $kamar->jumlah_kamar }} kamar tersedia</p>
                     <button class="btn btn-primary w-100" data-bs-toggle="modal" data-bs-target="#bookingModal"
                         data-room-id="{{ $kamar->id }}"
                         data-room-type="{{ $kamar->tipe_kamar }}"
                         data-room-photo="{{ Storage::url($kamar->foto) }}"
                         data-room-facilities="{{ $kamar->fasilitas }}"
+                          data-room-price="{{ $kamar->harga_kamar }}"
                         data-room-available="{{ $kamar->jumlah_kamar }}">
                         @if(Auth::check())
                             <i class="bi bi-cart"></i> Pesan
@@ -110,7 +112,7 @@
                             <h5><i class="bi bi-telephone-fill text-primary"></i> Telepon</h5>
                             <p>0811-2007-0000</p>
                             <h5><i class="bi bi-envelope-fill text-primary"></i> Email</h5>
-                            <p>info@hotelinsitu.com</p>
+                            <p>HotelInsitu@gmail.com</p>
                         </div>
                         <div class="col-md-6">
                             <h5><i class="bi bi-clock-fill text-primary"></i> Jam Operasional</h5>
@@ -127,10 +129,10 @@
     <div class="container">
         <div class="mb-2">
             @foreach(['facebook','instagram','twitter','youtube'] as $sosmed)
-            <a href="#" class="text-white mx-2"><i class="bi bi-{{ $sosmed }} fs-4"></i></a>
+            <a href="https://id.wikipedia.org/wiki/Media_sosial" class="text-white mx-2"><i class="bi bi-{{ $sosmed }} fs-4"></i></a>
             @endforeach
         </div>
-        <p>&copy; 2023 Hotel Insitu. All Rights Reserved.</p>
+        <p>&copy; 2025 Hotel Insitu. All Rights Reserved.</p>
     </div>
 </footer>
 

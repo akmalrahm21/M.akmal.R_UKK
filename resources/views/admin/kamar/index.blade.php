@@ -13,6 +13,7 @@
                 <th>Tipe Kamar</th>
                 <th>Jumlah</th>
                 <th>Fasilitas</th>
+        <th>Harga</th>
                 <th>Aksi</th>
             </tr>
         </thead>
@@ -23,6 +24,7 @@
                     <td>{{ $item->tipe_kamar }}</td>
                     <td>{{ $item->jumlah_kamar }}</td>
                     <td>{{ $item->fasilitas }}</td>
+            <td>Rp {{ number_format($item->harga_kamar, 0, ',', '.') }}</td>
                     <td>
                         <a href="{{ route('kamar.edit', $item->id) }}" class="btn btn-warning btn-sm">Edit</a>
                         <form action="{{ route('kamar.destroy', $item->id) }}" method="POST" style="display:inline-block;">
@@ -32,9 +34,8 @@
                     </td>
                 </tr>
                 @empty
-                <tr><td colspan="4">Belum ada data</td></tr>
+        <tr><td colspan="6">Belum ada data</td></tr>
             @endforelse
-
         </tbody>
     </table>
 </div>

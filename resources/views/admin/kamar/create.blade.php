@@ -31,6 +31,11 @@
                 <textarea name="fasilitas" class="form-control" rows="3" required placeholder="Pisahkan dengan koma, contoh: AC, TV, WiFi"></textarea>
             </div>
 
+            <div class="mb-3">
+                <label for="harga_kamar" class="form-label">Harga Kamar</label>
+                <input type="number" name="harga_kamar" id="harga_kamar" class="form-control" placeholder="Masukkan harga kamar" required>
+            </div>
+
             <button type="submit" class="btn btn-primary">Simpan</button>
             <a href="{{ route('kamar.index') }}" class="btn btn-secondary">Kembali</a>
         </form>

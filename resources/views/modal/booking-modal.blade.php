@@ -5,7 +5,8 @@
                 @csrf
                 <input type="hidden" name="kamar_id" id="modalRoomId">
                 <input type="hidden" name="tipe_kamar" id="modalRoomTypeInput">
-                
+                <input type="hidden" id="modalRoomPrice">
+
                 <div class="modal-header">
                     <h5 class="modal-title">Pesan Kamar: <span id="modalRoomType"></span></h5>
                     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Tutup"></button>
@@ -74,18 +75,25 @@
                 <input type="hidden" name="tipe_kamar" id="modalRoomTypeInput">
 
 
+
                 <div class="modal-header">
                     <h5 class="modal-title">Upload Bukti Pembayaran</h5>
                     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Tutup"></button>
                 </div>
 
                 <div class="modal-body">
-                    <p>Silakan unggah screenshot bukti pembayaran kamu di bawah ini ya...</p>
+                    <div class="text-center mt-3">
+                        <img src="https://miro.medium.com/v2/resize:fit:789/1*A9YcoX1YxBUsTg7p-P6GBQ.png" alt="Contoh Bukti Pembayaran" class="img-fluid rounded">
+                    </div>
+                    <div class="mb-3">
+                        <p><strong>Total Harga:</strong> Rp <span id="modalTotalPrice">0</span></p>
+                    </div>
+                    <p>Silakan unggah screenshot bukti pembayaran kamu di bawah ini</p>
                     <div class="mb-3">
                         <input type="file" name="bukti_pembayaran" class="form-control" accept="image/*" required>
                     </div>
+                    <p class="text-danger"><strong>Waktu tersisa untuk mengunggah bukti pembayaran: <span id="countdownTimer">10</span> detik</strong></p>
                 </div>
-
                 <div class="modal-footer">
                     <button type="submit" class="btn btn-primary">Kirim Bukti</button>
                     <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Batal</button>
@@ -96,7 +104,9 @@
 </div>
 
 
+
 <script>
+
     document.addEventListener('DOMContentLoaded', function () {
         const today = new Date().toISOString().split('T')[0];
         const modalCheckin = document.getElementById('modalCheckin');
@@ -167,6 +177,99 @@
         .catch(err => {
             console.error(err);
             alert("⚠️ Gagal kirim data booking, coba lagi.");
+        });
+    });
+    document.addEventListener('DOMContentLoaded', function () {
+    const bookingModal = document.getElementById('bookingModal');
+    const paymentModal = document.getElementById('paymentModal');
+    const modalTotalPrice = document.getElementById('modalTotalPrice');
+    const modalRoomQty = document.getElementById('modalRoomQty');
+
+    bookingModal.addEventListener('show.bs.modal', function (e) {
+        const btn = e.relatedTarget;
+        const roomPrice = btn.dataset.roomPrice;
+
+
+        document.getElementById('modalRoomPrice').value = roomPrice;
+    });
+
+    document.getElementById('btnTriggerPayment').addEventListener('click', function () {
+        const roomQty = parseInt(modalRoomQty.value, 10);
+        const roomPrice = parseInt(document.getElementById('modalRoomPrice').value, 10);
+
+        if (!isNaN(roomQty) && !isNaN(roomPrice)) {
+            const totalPrice = roomQty * roomPrice;
+            modalTotalPrice.textContent = totalPrice.toLocaleString('id-ID');
+        }
+
+
+        const paymentModalInstance = new bootstrap.Modal(paymentModal);
+        paymentModalInstance.show();
+    });
+});
+
+</script>
+<script>
+    document.addEventListener('DOMContentLoaded', function () {
+        const paymentModal = document.getElementById('paymentModal');
+        const countdownTimer = document.getElementById('countdownTimer');
+        const cancelTimeout = 10000;
+        let timeoutId;
+        let countdownInterval;
+
+        paymentModal.addEventListener('show.bs.modal', function () {
+            let timeLeft = cancelTimeout / 1000;
+            countdownTimer.textContent = timeLeft;
+
+
+            countdownInterval = setInterval(() => {
+                timeLeft -= 1;
+                countdownTimer.textContent = timeLeft;
+
+                if (timeLeft <= 0) {
+                    clearInterval(countdownInterval);
+                }
+            }, 1000);
+
+
+            timeoutId = setTimeout(() => {
+                const resepsionisId = document.getElementById('modalPaymentId').value;
+
+                if (resepsionisId) {
+                    fetch(`/resepsionis/batal/${resepsionisId}`, {
+                        method: 'POST',
+                        headers: {
+                            'X-CSRF-TOKEN': document.querySelector('input[name="_token"]').value
+                        }
+                    })
+                    .then(response => response.json())
+                    .then(data => {
+                        if (data.success) {
+                            alert('Pesanan dibatalkan karena tidak ada bukti pembayaran dalam waktu 1 menit.');
+                            bootstrap.Modal.getInstance(paymentModal).hide();
+                        } else {
+                            alert('Gagal membatalkan pesanan.');
+                        }
+                    })
+                    .catch(err => {
+                        console.error(err);
+                        alert('Terjadi kesalahan saat membatalkan pesanan.');
+                    });
+                }
+            }, cancelTimeout);
+        });
+
+        paymentModal.addEventListener('hide.bs.modal', function () {
+
+            clearTimeout(timeoutId);
+            clearInterval(countdownInterval);
+        });
+
+        const paymentForm = paymentModal.querySelector('form');
+        paymentForm.addEventListener('submit', function () {
+
+            clearTimeout(timeoutId);
+            clearInterval(countdownInterval);
         });
     });
 </script>

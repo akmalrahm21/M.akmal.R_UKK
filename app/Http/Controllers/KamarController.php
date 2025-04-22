@@ -28,9 +28,11 @@ class KamarController extends Controller
             'tipe_kamar' => 'required|string|max:255',
             'jumlah_kamar' => 'required|integer',
             'fasilitas' => 'required|string',
+            'harga_kamar' => 'required|numeric',
         ]);
 
         $data = $request->except('foto');
+        $data['harga_kamar'] = $request->input('harga_kamar');
 
         if ($request->hasFile('foto')) {
             $path = $request->file('foto')->store('kamar', 'public');
@@ -54,12 +56,12 @@ class KamarController extends Controller
             'tipe_kamar' => 'required|string|max:255',
             'jumlah_kamar' => 'required|integer',
             'fasilitas' => 'required|string',
+            'harga_kamar' => 'required|numeric',
         ]);
 
         $data = $request->except('foto');
 
         if ($request->hasFile('foto')) {
-            // Optional: Hapus foto lama
             if ($kamar->foto && Storage::disk('public')->exists($kamar->foto)) {
                 Storage::disk('public')->delete($kamar->foto);
             }

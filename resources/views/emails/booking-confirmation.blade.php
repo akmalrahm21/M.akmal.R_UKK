@@ -46,10 +46,10 @@
         <p><strong>Check-in:</strong> {{ $bookingData['checkin'] }}</p>
         <p><strong>Check-out:</strong> {{ $bookingData['checkout'] }}</p>
         <p><strong>Tipe Kamar:</strong> {{ $bookingData['room_type'] }}</p>
-        <p>Jika Anda memiliki pertanyaan lebih lanjut, jangan ragu untuk menghubungi kami. Kami berharap Anda memiliki pengalaman menginap yang menyenangkan!</p>
+        <p><b>Tunjukkan ini ke resepsionis ketika hendak melakukan konfirmasi pemesanan kamar</b>. Kami berharap Anda memiliki pengalaman menginap yang menyenangkan!</p>
         <div class="footer">
             <p>Salam hangat,</p>
-            <p><strong>Tim Hotel Kami</strong></p>
+            <p><strong>Tim Hotel Insitu</strong></p>
         </div>
     </div>
 </body>

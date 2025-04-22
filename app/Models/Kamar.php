@@ -15,7 +15,7 @@ class Kamar extends Model
     use HasFactory;
 
     protected $fillable = [
-        'foto', 'tipe_kamar', 'jumlah_kamar', 'fasilitas'
+        'foto', 'tipe_kamar', 'jumlah_kamar', 'fasilitas', 'harga_kamar'
     ];
 
     public function getAvailableRoomsAttribute()
